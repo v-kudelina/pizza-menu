@@ -1,6 +1,6 @@
 <template lang="pug">
 .step-2
-  .step__input(v-for = "topping in toppings")
+  .step__input(v-for = "topping in toppingsPull")
     input(type = "checkbox" v-model = "pizzaToppings" :value = "topping" :disabled = "disabledTopping(topping)")
     label {{topping.name}} {{topping.price}}$
   .step-2__buttons
@@ -11,33 +11,46 @@
 </template>
 
 <script>
-import { toppings } from "./utils.js"
-import { mapMutations } from "vuex";
+import { toppings } from "./utils.js";
+import { computed, ref } from "@vue/reactivity";
+import { useStore } from "vuex";
 
 export default {
-  data(){
-    return {
-      toppings,
-    }
-  },
-  computed:{
-    pizzaToppings: {
+  setup() {
+    const store = useStore();
+
+    const toppingsPull = ref(toppings);
+
+    const pizzaToppings = computed({
       get() {
-        return this.$store.state.pizza.toppings
+        return store.state.pizza.toppings;
       },
       set(value) {
-        this.$store.commit("selectPizzaToppings", value);
-      }
-    }
+        store.commit("selectPizzaToppings", value);
+      },
+    });
+
+    const disabledTopping = (selected) => {
+      const { value } = pizzaToppings;
+
+      const disableBacon =
+        selected.name === "bacon" &&
+        value.find((topping) => topping.name === "seafood");
+
+      const disableSeaFood =
+        selected.name === "seafood" &&
+        value.find((topping) => topping.name === "bacon");
+
+      const isTopingChosen = value.find(
+        (topping) => topping.name === selected.name
+      );
+
+      return (
+        !isTopingChosen && (value.length >= 6 || disableBacon || disableSeaFood)
+      );
+    };
+
+    return { toppingsPull, pizzaToppings, disabledTopping };
   },
-  methods: {
-    ...mapMutations(["selectPizzaToppings"]),
-    disabledTopping(selected) {
-      const disableBacon = selected.name === "bacon" && this.pizzaToppings.find(topping => topping.name === "seafood");
-      const disableSeaFood = selected.name === "seafood" && this.pizzaToppings.find(topping => topping.name === "bacon");
-      const checkLimit = this.pizzaToppings.find(topping => topping.name === selected.name)
-      return !checkLimit && (this.pizzaToppings.length >= 6 || disableBacon || disableSeaFood)
-    }
-  },
-}
+};
 </script>

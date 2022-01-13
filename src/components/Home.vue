@@ -6,6 +6,6 @@
 </template>
 
 <style lang="stylus" scoped>
-    h1
-      font-size: 40px
+h1
+  font-size: 40px
 </style>

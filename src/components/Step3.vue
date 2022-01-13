@@ -12,52 +12,59 @@
 </template>
 
 <script>
-
+import { computed } from "@vue/reactivity";
+import { useStore } from "vuex";
 
 export default {
-  computed: {
-    name: {
+  setup() {
+    const store = useStore();
+
+    const name = computed({
       get() {
-        return this.$store.state.user.name
+        return store.state.user.name;
       },
       set(value) {
-        this.updateUserInfo("name", value)
-      }
-    },
-    address: {
+        updateUserInfo("name", value);
+      },
+    });
+
+    const address = computed({
       get() {
-        return this.$store.state.user.address
+        return store.state.user.address;
       },
       set(value) {
-        this.updateUserInfo("address", value)
-      }
-    },
-    phone: {
+        updateUserInfo("address", value);
+      },
+    });
+
+    const phone = computed({
       get() {
-        return this.$store.state.user.phone
+        return store.state.user.phone;
       },
       set(value) {
-        this.updateUserInfo("phone", value)
-      }
-    }
+        updateUserInfo("phone", value);
+      },
+    });
+
+    const updateUserInfo = (field, value) => {
+      store.commit("updateUserInfo", { field, value });
+    };
+
+    return { name, address, phone };
   },
-  methods: {
-    updateUserInfo(field, value) {
-      this.$store.commit("updateUserInfo", {field, value});
-    }
-  }
-}
+};
 </script>
 
 <style lang="stylus" scoped>
-.step__input 
+.step__input
   display: flex
   flex-direction: column
+
   label
     margin-bottom: 10px
+  
   input
     width: 500px
     height: 30px
     margin-bottom: 20px
-
 </style>

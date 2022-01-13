@@ -3,7 +3,7 @@ import { createStore } from "vuex";
 export const store = createStore({
   state() {
     return {
-      pizza: { size: null, toppings: []},
+      pizza: { size: null, toppings: [] },
       user: { name: null, address: null, phone: null },
     };
   },
@@ -21,6 +21,6 @@ export const store = createStore({
     },
     updateUserInfo(state, { field, value }) {
       state.user[field] = value;
-    }
+    },
   },
 });

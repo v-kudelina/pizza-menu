@@ -1,6 +1,8 @@
 import { createApp } from "vue";
-import App from "./App.vue";
 import { createRouter, createWebHashHistory } from "vue-router";
+
+import App from "./App.vue";
+
 import Home from "./components/Home.vue";
 import Step1 from "./components/Step1.vue";
 import Step2 from "./components/Step2.vue";
